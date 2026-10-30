@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}My profile{% endblock %}
+{% block content %}
+<section class="page-intro profile-intro">
+  <div class="eyebrow"><span class="eyebrow-dot"></span> YOUR ACCOUNT</div>
+  <h1>Your <span>profile</span></h1>
+  <p class="page-subtitle">Keep your account details up to date and your study space yours.</p>
+</section>
+{% if error %}<div class="profile-alert" role="alert">{{ error }}</div>{% endif %}
+{% if success %}<div class="profile-success" role="status">{{ success }}</div>{% endif %}
+<div class="profile-grid">
+  <section class="panel profile-card">
+    <div class="profile-card-heading"><div class="profile-avatar-large">{{ current_user.name[:1]|upper }}</div><div><span class="profile-kicker">YOUR STUDY PROFILE</span><h2>{{ current_user.name }}</h2><p>{{ current_user.email }}</p></div></div>
+    <div class="profile-avatar-note"><span>✦</span><div><strong>Your avatar updates with your name</strong><small>We use your initials for a simple, personal profile badge.</small></div></div>
+    <form class="profile-form" method="post" action="/profile">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label for="profile-name">Display name</label>
+      <input class="text-input" id="profile-name" name="name" value="{{ current_user.name }}" autocomplete="name" required maxlength="80">
+      <label for="profile-email">Email address</label>
+      <input class="text-input" id="profile-email" name="email" type="email" value="{{ current_user.email }}" autocomplete="email" required maxlength="254">
+      <button class="button button-primary" type="submit">Save profile</button>
+    </form>
+  </section>
+  <section class="panel profile-card password-card">
+    <div class="panel-heading"><div><h2>Change your password</h2><p>Choose a password you don’t use on other sites.</p></div><span class="password-shield">⌑</span></div>
+    <form class="profile-form" method="post" action="/profile/password">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <label for="current-password">Current password</label>
+      <input class="text-input" id="current-password" name="current_password" type="password" autocomplete="current-password" required>
+      <label for="new-password">New password</label>
+      <input class="text-input" id="new-password" name="password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required>
+      <label for="confirm-password">Confirm new password</label>
+      <input class="text-input" id="confirm-password" name="confirm_password" type="password" autocomplete="new-password" minlength="12" maxlength="128" required>
+      <p class="auth-hint">At least 12 characters. You’ll be asked to sign in again after changing it.</p>
+      <button class="button button-primary" type="submit">Update password</button>
+    </form>
+    <div class="profile-recovery"><span>Need help signing in?</span><a href="/forgot-password">Reset your password by email →</a></div>
+  </section>
+</div>
+{% endblock %}

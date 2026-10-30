@@ -1,0 +1,5 @@
+{% extends 'auth_base.html' %}
+{% block title %}Please wait{% endblock %}
+{% block heading %}One moment, please{% endblock %}
+{% block description %}{{ error }}{% endblock %}
+{% block form %}<a class="auth-submit auth-submit-link" href="/login">Return to sign in <span aria-hidden="true">→</span></a>{% endblock %}

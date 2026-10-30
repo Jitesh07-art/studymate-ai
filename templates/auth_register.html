@@ -1,0 +1,20 @@
+{% extends 'auth_base.html' %}
+{% block title %}Create account{% endblock %}
+{% block heading %}Start with a fresh page{% endblock %}
+{% block description %}Create your private study space and keep your learning organized.{% endblock %}
+{% block form %}
+<form class="auth-form" method="post" action="/register">
+  <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+  <label for="name">Your name</label>
+  <input class="auth-input" id="name" name="name" type="text" autocomplete="name" placeholder="How should we greet you?" required maxlength="80">
+  <label for="email">Email address</label>
+  <input class="auth-input" id="email" name="email" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="254">
+  <label for="password">Create a password</label>
+  <input class="auth-input" id="password" name="password" type="password" autocomplete="new-password" placeholder="At least 12 characters" required minlength="12" maxlength="128">
+  <label for="confirm-password">Confirm password</label>
+  <input class="auth-input" id="confirm-password" name="confirm_password" type="password" autocomplete="new-password" placeholder="Enter it once more" required minlength="12" maxlength="128">
+  <p class="auth-hint">Use at least 12 characters to keep your study space secure.</p>
+  <button class="auth-submit" type="submit">Create my account <span aria-hidden="true">→</span></button>
+</form>
+{% endblock %}
+{% block footer %}<span>Already have an account?</span> <a href="/login">Sign in</a>{% endblock %}

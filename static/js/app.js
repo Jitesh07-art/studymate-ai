@@ -5,7 +5,9 @@ const $$ = (selector, root = document) => [...root.querySelectorAll(selector)];
 const safe = (value) => String(value ?? "").replace(/[&<>"']/g, (char) => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
 
 async function api(url, options = {}) {
-  const response = await fetch(url, {headers: {"Content-Type": "application/json", ...(options.headers || {})}, ...options});
+  const csrfToken = document.querySelector('meta[name="csrf-token"]')?.content;
+  const headers = {"Content-Type": "application/json", ...(csrfToken ? {"X-CSRF-Token": csrfToken} : {}), ...(options.headers || {})};
+  const response = await fetch(url, {...options, headers});
   const data = await response.json().catch(() => ({}));
   if (!response.ok) throw new Error(data.error || "Something went wrong. Please try again.");
   return data;

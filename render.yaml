@@ -14,4 +14,6 @@ services:
       - key: AI_MODEL
         value: gpt-4o-mini
       - key: AI_DEMO_MODE
-        value: "false"
+        value: "true"
+      - key: SESSION_COOKIE_SECURE
+        value: "true"

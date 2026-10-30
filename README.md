@@ -1,10 +1,10 @@
 # StudyMate AI
 
-StudyMate AI is a local, single-user study assistant built with Flask, SQLite, HTML, CSS, and vanilla JavaScript. It can summarize notes, make multiple-choice quizzes, score quiz attempts on the server, and create persistent flashcard decks. The dashboard and history pages use saved data from your local SQLite database.
+StudyMate AI is an account-based study assistant built with Flask, SQLite or PostgreSQL, HTML, CSS, and vanilla JavaScript. Create a private account to summarize notes, make multiple-choice quizzes, score quiz attempts on the server, and build flashcard decks. Study history, preferences, and profile details are scoped to the signed-in user.
 
 **Live website:** [studymate-ai-lpci.onrender.com](https://studymate-ai-lpci.onrender.com)
 
-This is a free Render demo using sample AI outputs. Saved data may be lost when the service restarts, and the public site has no sign-in; do not enter sensitive study material.
+The linked Render demo may still be running an earlier release. A hosted release with accounts needs a persistent PostgreSQL `DATABASE_URL`; do not enter sensitive study material until that database and deployment have been verified.
 
 ## Project structure
 
@@ -13,7 +13,7 @@ This is a free Render demo using sample AI outputs. Saved data may be lost when 
 ├── app.py                 # Flask pages and JSON APIs
 ├── ai_service.py          # Provider calls, prompts, demo examples, validation
 ├── config.py              # Environment-based configuration
-├── database.py            # SQLite schema and data helpers
+├── database.py            # SQLite/PostgreSQL schema and data helpers
 ├── requirements.txt
 ├── .env.example           # Safe configuration template
 ├── instance/
@@ -37,7 +37,7 @@ Copy-Item .env.example .env
 python app.py
 ```
 
-If PowerShell blocks activation, use `venv\Scripts\python.exe -m pip install -r requirements.txt` and then `venv\Scripts\python.exe app.py`. Visit **http://127.0.0.1:5000**. Stop the server with Ctrl+C. The database is created automatically in `instance/studymate.db` and remains after restarting the server.
+If PowerShell blocks activation, use `venv\Scripts\python.exe -m pip install -r requirements.txt` and then `venv\Scripts\python.exe app.py`. Visit **http://127.0.0.1:5000**. Stop the server with Ctrl+C. The local database is created automatically in `instance/studymate.db` and remains after restarting the server. SQLite is the local default; set `DATABASE_URL` to a PostgreSQL connection string to use PostgreSQL instead.
 
 ## Configure genuine AI
 
@@ -60,7 +60,7 @@ With the virtual environment active, run:
 python -m unittest discover -s tests -v
 ```
 
-The tests use temporary databases and cover page/health responses, empty input validation, summary persistence, answer-key privacy and scoring, flashcard persistence/deletion, and the missing-key setup message.
+The tests use temporary SQLite databases and cover account creation/sign-in, CSRF protection, private pages, password recovery, profile/password updates, per-user history isolation, summary persistence, answer-key privacy and scoring, flashcard persistence/deletion, and the missing-key setup message. PostgreSQL compatibility is implemented but requires a configured PostgreSQL server for an integration test.
 
 ## Deploy on Render
 
@@ -71,13 +71,13 @@ The included [render.yaml](./render.yaml) describes a free Render web service. T
 3. If you want genuine AI-generated study materials, add `AI_API_KEY` in the Render service's **Environment** settings. Use a key supported by the configured OpenAI-compatible provider, and never commit it to GitHub. To use sample outputs without a key, change `AI_DEMO_MODE` to `true` in the service settings.
 4. After deployment, open the service URL and check `/api/health`. A healthy response reports `"status": "ok"` and `"database": "connected"`.
 
-This configuration uses Render's free instance and the app's local SQLite database. The database is temporary on this service: saved summaries, quizzes, flashcards, and settings can be lost when the service restarts or is redeployed, and the service may spin down while idle. Persistent disks require a paid service; see Render's [disk documentation](https://render.com/docs/disks) and [free service limitations](https://render.com/docs/free) before changing plans.
+The included Blueprint creates only a free web service. For persistent accounts and study data, configure `DATABASE_URL` with a PostgreSQL connection string from a separately provisioned database. The app will fall back to SQLite if it is missing, but SQLite on Render is temporary: accounts, saved summaries, quizzes, flashcards, and settings can be lost when the service restarts or is redeployed. Check the current database pricing before provisioning a persistent database. For password-reset email, configure `SMTP_HOST`, `SMTP_PORT`, `MAIL_FROM`, and (if required by your mail provider) `SMTP_USERNAME` and `SMTP_PASSWORD`; recovery is unavailable until SMTP is configured.
 
-The app does not have user sign-in. Anyone who can reach the deployed URL can use it, so do not enter sensitive or private study material.
+Password-reset links are one-use and expire after one hour. Account data is isolated by user; existing anonymous SQLite study records are not automatically assigned to a new account.
 
 ## Architecture and data
 
-Flask serves six template pages and JSON endpoints. Browser JavaScript sends study material to Flask; only `ai_service.py` talks to the configured AI provider. SQLite uses four main content tables: `summaries` stores source notes and saved summary text; `quiz_sessions` stores the generated questions and private answer keys; `quiz_attempts` stores submitted answers and scores; and `flashcard_sets` stores generated card decks. A small `settings` table keeps theme and language preferences. Quiz generation returns questions without answer indexes, and `/api/quiz/submit` calculates and saves the score on the server.
+Flask serves account and study pages plus JSON endpoints. Browser JavaScript sends study material to Flask; only `ai_service.py` talks to the configured AI provider. The database contains user accounts, password-reset tokens, and content tables: `summaries` stores source notes and saved summary text; `quiz_sessions` stores generated questions and private answer keys; `quiz_attempts` stores submitted answers and scores; and `flashcard_sets` stores generated card decks. The `settings` table keeps per-user theme and language preferences. Quiz generation returns questions without answer indexes, and `/api/quiz/submit` calculates and saves the score on the server.
 
 ## Feature checklist
 
@@ -87,5 +87,8 @@ Flask serves six template pages and JSON endpoints. Browser JavaScript sends stu
 - [x] Flashcard generation, flip, shuffle, practice markers, saved decks, and reopening
 - [x] Searchable/filterable history with viewing and confirmation before deletion
 - [x] Light/dark theme and saved language preference
+- [x] Sign-up, sign-in, sign-out, and protected user-specific study spaces
+- [x] Profile editing, password changes, and one-use email password-reset flow
+- [x] CSRF protection and per-user history/settings isolation
 - [x] Backend-only API key, input limits, readable errors, and labeled demo mode
 - [x] Automated Flask API tests

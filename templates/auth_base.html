@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f8f8">
+  <meta name="csrf-token" content="{{ csrf_token }}">
+  <title>{% block title %}Welcome{% endblock %} · StudyMate AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/auth.css') }}">
+</head>
+<body class="auth-body {{ 'auth-page-login' if page == 'login' else '' }}">
+  <main class="auth-layout">
+    <section class="auth-panel">
+      <a class="auth-brand" href="/login" aria-label="StudyMate AI home"><span class="auth-brand-mark">✳</span><span>StudyMate<span> AI</span></span></a>
+      <div class="auth-content">
+        <div class="auth-eyebrow"><span></span> YOUR PERSONAL STUDY SPACE</div>
+        <h1>{% block heading %}{% endblock %}</h1>
+        <p class="auth-lede">{% block description %}{% endblock %}</p>
+        {% if error %}<div class="auth-alert" role="alert">{{ error }}</div>{% endif %}
+        {% if message %}<div class="auth-success" role="status">{{ message }}</div>{% endif %}
+        {% block form %}{% endblock %}
+        <div class="auth-switch">{% block footer %}{% endblock %}</div>
+      </div>
+      <p class="auth-legal">By continuing, you agree to use StudyMate responsibly and keep your account secure.</p>
+    </section>
+    <aside class="auth-aside" aria-label="StudyMate features">
+      <div class="aside-orbit orbit-one"></div><div class="aside-orbit orbit-two"></div>
+      <div class="aside-topline"><span class="aside-status-dot"></span> A calmer way to make progress</div>
+      <div class="study-art" aria-hidden="true">
+        <div class="art-spark spark-one">✦</div><div class="art-spark spark-two">✳</div>
+        <div class="art-card art-card-back"><span class="art-mini-label">TODAY'S FOCUS</span><span class="art-mini-line"></span><span class="art-mini-line short"></span><span class="art-progress"><i></i></span><small>One step at a time</small></div>
+        <div class="art-card art-card-front"><span class="art-card-icon">✎</span><span class="art-mini-label">STUDY SESSION</span><strong>Small steps,<br>strong understanding.</strong><span class="art-pill">✦ &nbsp; Keep your momentum</span></div>
+        <div class="art-note"><span>✓</span><div><strong>Progress saved</strong><small>Your learning, all in one place</small></div></div>
+      </div>
+      <div class="aside-copy"><div class="aside-kicker">LEARN AT YOUR OWN PACE</div><h2>Make room for<br><span>your next big idea.</span></h2><p>Turn notes into summaries, practice with quizzes, and keep the concepts that matter close.</p></div>
+      <div class="aside-bottom"><span>STUDY</span><i></i><span>PRACTICE</span><i></i><span>GROW</span><span class="aside-stars">✦ ✧</span></div>
+    </aside>
+  </main>
+</body>
+</html>
