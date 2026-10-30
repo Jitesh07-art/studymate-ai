@@ -2,6 +2,10 @@
 
 StudyMate AI is a local, single-user study assistant built with Flask, SQLite, HTML, CSS, and vanilla JavaScript. It can summarize notes, make multiple-choice quizzes, score quiz attempts on the server, and create persistent flashcard decks. The dashboard and history pages use saved data from your local SQLite database.
 
+**Live website:** [studymate-ai-lpci.onrender.com](https://studymate-ai-lpci.onrender.com)
+
+This is a free Render demo using sample AI outputs. Saved data may be lost when the service restarts, and the public site has no sign-in; do not enter sensitive study material.
+
 ## Project structure
 
 ```text
