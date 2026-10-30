@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: studymate-ai
+    runtime: python
+    plan: free
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn --bind 0.0.0.0:$PORT app:app
+    healthCheckPath: /api/health
+    envVars:
+      - key: SECRET_KEY
+        generateValue: true
+      - key: AI_PROVIDER
+        value: openai
+      - key: AI_MODEL
+        value: gpt-4o-mini
+      - key: AI_DEMO_MODE
+        value: "false"

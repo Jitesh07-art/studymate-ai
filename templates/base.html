@@ -1,0 +1,37 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f6f7fb">
+  <title>{% block title %}StudyMate AI{% endblock %} · StudyMate AI</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/overrides.css') }}">
+</head>
+<body data-page="{{ page }}">
+  <aside class="sidebar" id="sidebar">
+    <a class="brand" href="/"><span class="brand-mark">✳</span><span>StudyMate<span class="brand-ai"> AI</span></span></a>
+    <div class="nav-label">WORKSPACE</div>
+    <nav class="nav-list" aria-label="Main navigation">
+      <a href="/" class="nav-link {{ 'active' if page == 'dashboard' else '' }}"><span class="nav-icon">▦</span>Dashboard</a>
+      <a href="/summarizer" class="nav-link {{ 'active' if page == 'summarizer' else '' }}"><span class="nav-icon">✎</span>Summarizer</a>
+      <a href="/quiz" class="nav-link {{ 'active' if page == 'quiz' else '' }}"><span class="nav-icon">☷</span>Quiz generator</a>
+      <a href="/flashcards" class="nav-link {{ 'active' if page == 'flashcards' else '' }}"><span class="nav-icon">▱</span>Flashcards</a>
+      <a href="/history" class="nav-link {{ 'active' if page == 'history' else '' }}"><span class="nav-icon">◷</span>Study history</a>
+    </nav>
+    <div class="sidebar-bottom"><div class="upgrade-card"><div class="upgrade-badge">✦</div><strong>Make study time count</strong><p>Turn your notes into a smarter study routine.</p><a href="/summarizer">Start studying <span>↗</span></a></div>
+      <a href="/settings" class="nav-link {{ 'active' if page == 'settings' else '' }}"><span class="nav-icon">⚙</span>Settings</a>
+      <div class="profile"><div class="avatar">S</div><div><strong>Student</strong><small>Personal workspace</small></div><span class="profile-more">···</span></div>
+    </div>
+  </aside>
+  <div class="mobile-scrim" id="mobile-scrim"></div>
+  <main class="main-shell">
+    <header class="topbar"><button class="mobile-menu" id="menu-toggle" aria-label="Open navigation">☰</button><div class="breadcrumb"><span>Workspace</span><span class="crumb-slash">/</span><strong>{{ page|capitalize }}</strong></div><div class="topbar-actions"><span class="today-label" id="today-label"></span><button class="icon-button theme-toggle" id="theme-toggle" aria-label="Toggle dark theme" title="Toggle theme">☾</button><div class="top-avatar">S</div></div></header>
+    <div class="page-content">{% block content %}{% endblock %}</div>
+  </main>
+  <div class="toast-region" id="toast-region" aria-live="polite"></div>
+  <div class="modal-backdrop hidden" id="modal-backdrop"><section class="confirm-modal" role="dialog" aria-modal="true" aria-labelledby="modal-title"><div class="modal-icon">!</div><h2 id="modal-title">Are you sure?</h2><p id="modal-message">This action cannot be undone.</p><div class="modal-actions"><button class="button button-quiet" id="modal-cancel">Cancel</button><button class="button button-danger" id="modal-confirm">Delete</button></div></section></div>
+  <script src="{{ url_for('static', filename='js/app.js') }}" defer></script>
+</body>
+</html>
